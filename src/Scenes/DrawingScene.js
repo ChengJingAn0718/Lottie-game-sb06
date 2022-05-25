@@ -277,6 +277,7 @@ export default function Scene({ nextFunc, _geo,
         introturtle.current.stop();
         setTimeout(() => {
             startTransition(2)
+            animationRef.current.style.transition = '0s'
             setTimeout(() => {
                 turtleBaseRef.current.className = 'hideObject'
                 drawingPanel.current.className = 'showObject'
