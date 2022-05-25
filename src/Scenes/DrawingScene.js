@@ -234,7 +234,7 @@ export default function Scene({ nextFunc, _geo,
         setPrimaryRepeatAudio(audioList.letterAudio)
         setRepeatAudio(audioList.bodyAudio1)
 
-        showingDrawingPanel()
+        // showingDrawingPanel()
         return () => {
             currentImgNumOriginal = 0;
             repeatStep = 0;
@@ -1189,7 +1189,7 @@ export default function Scene({ nextFunc, _geo,
                                                 isTracingStarted = true;
                                                 parentObject.current.style.pointerEvents = ''
                                             }
-                                            
+
                                             currentLingLength = firstPosList[letterNum][stepCount].w
                                             ? firstPosList[letterNum][stepCount].w : lineLengthList[letterNum]
 
