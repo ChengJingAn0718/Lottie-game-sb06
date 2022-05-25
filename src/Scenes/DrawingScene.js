@@ -194,6 +194,10 @@ export default function Scene({ nextFunc, _geo,
             setTimeout(() => {
                 introturtle.current.play();
                 audioList.letterAudio.play()
+
+                animationRef.current.style.transform = 'translateY(' + _geo.height * animtionList[letterNum].scale * -0.1 + 'px) scale(1.1) '
+                animationRef.current.style.transition = '1.5s'
+
                 setTimeout(() => {
                     introturtle.current.stop();
                 }, 600);
