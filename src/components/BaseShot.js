@@ -16,7 +16,7 @@ let backAudio = loadSound('bMusic', true)
 backAudio.loop = true;
 backAudio.volume = 0.12;
 
-let currentSceneNumber = 21;
+let currentSceneNumber = 22;
 
 
 let wordVoiceList = [
