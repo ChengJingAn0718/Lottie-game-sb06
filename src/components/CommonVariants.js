@@ -714,8 +714,7 @@ const firstPosList = [
 const movePath = [
     [
         [
-
-            { x: 674, y: 275 },
+            { x: 674, y: 280 },
             { x: 672, y: 589 },
         ],
         [
@@ -770,7 +769,7 @@ const movePath = [
         [
 
             { x: 405, y: 218 },
-            { x: 901, y: 217 },
+            { x: 901, y: 218 },
         ],
 
     ],

@@ -885,7 +885,7 @@ export default function Scene({ nextFunc, _geo,
 
                     if (x1 != x2)
                         for (let i = 0; i < Math.abs(currentPath[fromIndex].x
-                            - currentPath[toIndex].x) / 0.1; i += 0.1) {
+                            - currentPath[toIndex].x) ; i += 0.1) {
                             let currentXPos = x1 + i;
                             let currentYPos = y1 + (y2 - y1) / (x2 - x1) * (currentXPos - x1)
 
@@ -897,7 +897,7 @@ export default function Scene({ nextFunc, _geo,
 
                     else {
                         let addY = y2 > y1 ? y1 : y2;
-                        for (let i = 0; i < Math.abs(y1 - y2) / 0.1; i += 0.1) {
+                        for (let i = 0; i < Math.abs(y1 - y2) ; i += 0.1) {
                             let currentXPos = x1;
                             let currentYPos = addY + i
 
