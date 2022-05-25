@@ -2,7 +2,7 @@ import "../stylesheets/styles.css";
 import "../stylesheets/button.css";
 
 import { useEffect, useRef, useState } from "react";
-import { prePathUrl, setPrimaryRepeatAudio, setRepeatType } from "../components/CommonFunctions";
+import { prePathUrl, setExtraVolume, setPrimaryRepeatAudio, setRepeatType } from "../components/CommonFunctions";
 import Phaser from "phaser"
 import BaseImage from "../components/BaseImage";
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -185,6 +185,7 @@ export default function Scene({ nextFunc, _geo,
         addHighlightCount = firstPosList[letterNum][0].addCount ? firstPosList[letterNum][0].addCount : 0
         highCurrentNum = addHighlightCount;
 
+        setExtraVolume(audioList.letterAudio, 2)
 
         audioList.bodyAudio1.src = returnAudioPath(explainVoices[0], true)
         audioList.bodyAudio2.src = returnAudioPath(clapVoices[0])
@@ -233,7 +234,6 @@ export default function Scene({ nextFunc, _geo,
         setPrimaryRepeatAudio(audioList.letterAudio)
         setRepeatAudio(audioList.bodyAudio1)
 
-        // showingDrawingPanel()
         return () => {
             currentImgNumOriginal = 0;
             repeatStep = 0;
@@ -476,7 +476,7 @@ export default function Scene({ nextFunc, _geo,
         curve = new Phaser.Curves.Spline([firstPosList[letterNum][0].x, firstPosList[letterNum][0].y]);
         subCurve = new Phaser.Curves.Spline([currentPath[0].x, currentPath[0].y]);
 
-        circleObj = this.add.circle(movePath[letterNum][0][0].x, movePath[letterNum][0][0].y, 60, 0xffffdd, 0.0)
+        circleObj = this.add.circle(movePath[letterNum][0][0].x, movePath[letterNum][0][0].y, 70, 0xffffdd, 0.0)
 
         rememberX = movePath[letterNum][0][0].x;
 
@@ -879,7 +879,7 @@ export default function Scene({ nextFunc, _geo,
                     let y1 = currentPath[fromIndex].y
                     let y2 = currentPath[toIndex].y
 
-                    let optimizedPosition = currentPath[currentMinDisIndex]
+                    optimizedPosition = currentPath[currentMinDisIndex]
                     minDistance = 1000
 
 
@@ -911,7 +911,7 @@ export default function Scene({ nextFunc, _geo,
 
 
                     if (currentMinDisIndex >= nearestStepNum) {
-                        if (minDistance < 60) {
+                        if (minDistance < 100) {
 
                             if (nearestStepNum != currentMinDisIndex && currentMinDisIndex > 0) {
 

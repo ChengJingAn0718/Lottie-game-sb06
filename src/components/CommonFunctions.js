@@ -181,3 +181,28 @@ export function stopRepeatAudio() {
 export function isRepeating() {
     return isRepeat;
 }
+
+var sourceList = [];
+var gainNodeList = []
+var audioCtxlist = []
+var extraAudioList = []
+
+export function setExtraVolume(audio, value) {
+    if (!extraAudioList.includes(audio)) {
+        extraAudioList.push(audio)
+        audioCtxlist.push(new AudioContext())
+        sourceList.push(audioCtxlist[audioCtxlist.length - 1].createMediaElementSource(audio))
+        gainNodeList.push(audioCtxlist[audioCtxlist.length - 1].createGain())
+        sourceList[sourceList.length - 1].connect(gainNodeList[gainNodeList.length - 1]);
+        gainNodeList[gainNodeList.length - 1].connect(audioCtxlist[audioCtxlist.length - 1].destination);
+        setVolume(extraAudioList.length - 1, value)
+    }
+    else {
+        let index = extraAudioList.findIndex(element => element == audio)
+        setVolume(index, value)
+    }
+}
+
+function setVolume(index, value) {
+    gainNodeList[index].gain.value = value; // double the volume
+}
