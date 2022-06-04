@@ -190,6 +190,7 @@ export default function Scene({ nextFunc, _geo,
         audioList.bodyAudio1.src = returnAudioPath(explainVoices[0], true)
         audioList.bodyAudio2.src = returnAudioPath(clapVoices[0])
 
+        
         setTimeout(() => {
 
             setTimeout(() => {
@@ -234,7 +235,7 @@ export default function Scene({ nextFunc, _geo,
         setPrimaryRepeatAudio(audioList.letterAudio)
         setRepeatAudio(audioList.bodyAudio1)
 
-        // showingDrawingPanel()
+        showingDrawingPanel()
         return () => {
             currentImgNumOriginal = 0;
             repeatStep = 0;

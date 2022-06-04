@@ -486,7 +486,7 @@ const firstPosList = [
     ],
     //5
     [
-        { x: 528, y: 251, addCount: 1 },
+        { x: 528, y: 251, addCount: 2 },
         { x: 664, y: 382 },
         { x: 668, y: 497 },
         { x: 740, y: 253 },

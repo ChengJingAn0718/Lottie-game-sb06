@@ -130,7 +130,7 @@ export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
 
             timerList[1] = setTimeout(() => {
                 introturtle.current.stop()
-                if (currentLetterNum != 11 && currentLetterNum != 5)
+                if (currentLetterNum != 11 && currentLetterNum != 5 && currentLetterNum != 16)
                     timerList[2] = setTimeout(() => {
                         scaleRef.current.className = 'show-item'
                         timerList[3] = setTimeout(() => {
