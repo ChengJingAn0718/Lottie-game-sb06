@@ -10,7 +10,7 @@ import { MusicButton } from './CommonButtons';
 import "../stylesheets/styles.css";
 import "../stylesheets/button.css";
 
-import { prePathUrl,Switch } from "./CommonFunctions";
+import { prePathUrl, Switch } from "./CommonFunctions";
 
 
 var __geo;
@@ -67,9 +67,7 @@ const App = ({ geo, _setBackground, __controlBacksound, _startTransition,
 
   function setFomart(sceneNum) {
     if (sceneNum == 1) {
-      setTimeout(() => {
-        musicRef.current.fomartSound()
-      }, 1000);
+      musicRef.current.fomartSound()
     }
     setIndex(sceneNum);
     changeBackgroundImage(sceneNum);
