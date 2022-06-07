@@ -1,7 +1,7 @@
 import "../stylesheets/styles.css";
 import "../stylesheets/button.css";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import BaseImage from "../components/BaseImage";
 import { prePathUrl } from "../components/CommonFunctions";
 import { returnAudioPath } from "../utils/loadSound";
@@ -99,9 +99,10 @@ const scaleInfoList = [
 
 let timerList = []
 
-export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
-    audioList
-}) {
+const Scene = React.forwardRef(({
+    nextFunc, _baseGeo, currentLetterNum, _geo,
+    audioList,bgLoad
+}, ref) => {
     const parentObject = useRef()
     const turtleBaseRef = useRef();
     const introturtle = useRef();
@@ -109,61 +110,72 @@ export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
     const scaleBase = useRef()
     const skipButton = useRef()
 
-    useEffect(() => {
 
-        audioList.bodyAudio1.src = returnAudioPath(audioPath[currentLetterNum].first)
-        audioList.bodyAudio2.src = returnAudioPath(audioPath[currentLetterNum].second)
-        if (audioPath[currentLetterNum].third != '00')
-            audioList.bodyAudio3.src = returnAudioPath(audioPath[currentLetterNum].third);
-
-
-        timerList[10] = setTimeout(() => {
-
-            audioList.bodyAudio1.play()
-            introturtle.current.play()
+    React.useImperativeHandle(ref, () => ({
+        startGame: () => {
+            parentObject.current.className = 'aniObject'
 
             skipButton.current.className = 'aniObject'
             timerList[12] = setTimeout(() => {
                 skipButton.current.className = 'commonButton'
             }, 1000);
 
+            audioList.bodyAudio1.src = returnAudioPath(audioPath[currentLetterNum].first)
+            audioList.bodyAudio2.src = returnAudioPath(audioPath[currentLetterNum].second)
+            if (audioPath[currentLetterNum].third != '00')
+                audioList.bodyAudio3.src = returnAudioPath(audioPath[currentLetterNum].third);
 
-            timerList[1] = setTimeout(() => {
-                introturtle.current.stop()
-                if (currentLetterNum != 11 && currentLetterNum != 5 && currentLetterNum != 16)
-                    timerList[2] = setTimeout(() => {
-                        scaleRef.current.className = 'show-item'
-                        timerList[3] = setTimeout(() => {
-                            audioList.bodyAudio2.play()
 
-                            timerList[4] = setTimeout(() => {
-                                scaleRef.current.style.transform = 'translate(' + scaleInfoList[currentLetterNum].l + '%,' + scaleInfoList[currentLetterNum].t + '%'
-                                    + ') scale(' + scaleInfoList[currentLetterNum].s + ') '
-                                scaleRef.current.style.transition = '3s'
-                            }, 1000);
+            timerList[10] = setTimeout(() => {
 
-                            timerList[5] = setTimeout(() => {
-                                if (audioPath[currentLetterNum].third != '00') {
-                                    audioList.bodyAudio3.play()
+                audioList.bodyAudio1.play()
+                introturtle.current.play()
 
-                                    timerList[6] = setTimeout(() => {
-                                        nextFunc()
-                                    }, audioList.bodyAudio3.duration * 1000 + 3000);
-                                }
-                                else
-                                    timerList[7] = setTimeout(() => {
-                                        nextFunc()
-                                    }, 3000);
-                            }, audioList.bodyAudio2.duration * 1000);
-                        }, 2000);
-                    }, 700);
-                else
-                    timerList[8] = setTimeout(() => {
-                        nextFunc()
-                    }, 1000);
+              
 
-            }, audioList.bodyAudio1.duration * 1000);
-        }, 3000);
+
+                timerList[1] = setTimeout(() => {
+                    introturtle.current.stop()
+                    if (currentLetterNum != 11 && currentLetterNum != 5 && currentLetterNum != 16)
+                        timerList[2] = setTimeout(() => {
+                            scaleRef.current.className = 'show-item'
+                            timerList[3] = setTimeout(() => {
+                                audioList.bodyAudio2.play()
+
+                                timerList[4] = setTimeout(() => {
+                                    scaleRef.current.style.transform = 'translate(' + scaleInfoList[currentLetterNum].l + '%,' + scaleInfoList[currentLetterNum].t + '%'
+                                        + ') scale(' + scaleInfoList[currentLetterNum].s + ') '
+                                    scaleRef.current.style.transition = '3s'
+                                }, 1000);
+
+                                timerList[5] = setTimeout(() => {
+                                    if (audioPath[currentLetterNum].third != '00') {
+                                        audioList.bodyAudio3.play()
+
+                                        timerList[6] = setTimeout(() => {
+                                            nextFunc()
+                                        }, audioList.bodyAudio3.duration * 1000 + 3000);
+                                    }
+                                    else
+                                        timerList[7] = setTimeout(() => {
+                                            nextFunc()
+                                        }, 3000);
+                                }, audioList.bodyAudio2.duration * 1000);
+                            }, 2000);
+                        }, 700);
+                    else
+                        timerList[8] = setTimeout(() => {
+                            nextFunc()
+                        }, 1000);
+
+                }, audioList.bodyAudio1.duration * 1000);
+            }, 3000);
+
+        }
+
+    }))
+
+    useEffect(() => {
 
         return () => {
             timerList.map(timer => { clearTimeout(timer); console.log('timer', timer) })
@@ -183,7 +195,7 @@ export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
 
     return (
         <div
-            className="aniObjectDelay"
+            className="hideObject"
             ref={parentObject}
             style={{
                 position: "fixed", width: _baseGeo.width + "px"
@@ -248,6 +260,10 @@ export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
                         ref={introturtle}
                         src={prePathUrl() + 'lottieFiles/character/turtle.json'}
                         loop
+                        onEvent={(e) => {
+                            if (e == 'load')
+                                bgLoad();
+                        }}
                         style={{
                             position: 'absolute',
                             width: '100%',
@@ -307,6 +323,7 @@ export default function Scene({ nextFunc, _baseGeo, currentLetterNum, _geo,
             </div>
         </div>
     );
-}
+})
 
+export default Scene;
 var list = []

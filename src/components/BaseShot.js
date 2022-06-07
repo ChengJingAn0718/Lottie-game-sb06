@@ -18,7 +18,7 @@ backAudio.volume = 0.12;
 
 let currentSceneNumber = 25;
 
-
+let loadImageCount = 0
 let wordVoiceList = [
     ['10', '07', '08'],
     ['13', '15', '16'],
@@ -133,6 +133,9 @@ export default function BaseShot() {
 
     const myImage = useRef();
     const myImage1 = useRef();
+
+    const introImg = useRef();
+
     const playGameBtn = useRef();
 
     const appRef = useRef();
@@ -149,17 +152,17 @@ export default function BaseShot() {
     });
 
     function backgroundLoaded() {
-        setTimeout(() => {
-
-            if (!isGameLoaded) {
-                isGameLoaded = true
-                setTimeout(() => {
-                    loadingBar.current.className = 'hide'
-                }, 300);
-            }
-
-            setBackLoaded(true)
-        }, 50);
+        loadImageCount++
+        if (loadImageCount == 2)
+            setTimeout(() => {
+                if (!isGameLoaded) {
+                    isGameLoaded = true
+                    setTimeout(() => {
+                        loadingBar.current.className = 'hide'
+                    }, 300);
+                }
+                setBackLoaded(true)
+            }, 50);
     }
 
     function controlBacksound() {
@@ -177,6 +180,7 @@ export default function BaseShot() {
         // refIntroText.current.style.left = geometry.left + -1 * geometry.width + "px"
         refIntroText.current.className = 'hide'
         playGameBtn.current.className = 'hide'
+        controlIntroImg(false)
 
     }
 
@@ -197,15 +201,11 @@ export default function BaseShot() {
             // titleAudio.play().catch(error => { });
         }, 700);
 
-
-        setTimeout(() => {
-            playGameBtn.current.className = 'introText'
-        }, 1000);
-
+        playGameBtn.current.className = 'introText'
 
         setTimeout(() => {
             playGameBtn.current.className = 'commonButton'
-        }, 2500);
+        }, 1500);
 
     }
 
@@ -286,39 +286,29 @@ export default function BaseShot() {
     }, []);
 
 
+    function controlIntroImg(isVisable) {
+        if (isVisable)
+            introImg.current.className = 'aniObject'
+        else
+            introImg.current.className = 'hide'
+    }
+
     function setBackground(imgUrl, optionNum = -1) {
         if (imgUrl != oldBackgroundImage) {
 
             setBackLoaded(false)
-            let waitTime = 0;
-            if (imgUrl == 'SB_05_BG_01')
-                waitTime = 1500
+
+            oldBackgroundImage = imgUrl;
+            myImage1.current.src = prePathUrl() + "images/BG/" + imgUrl + ".svg";
+
+            if (optionNum != 1)
+                myImage1.current.className = 'background-move'
+
             setTimeout(() => {
-
-                oldBackgroundImage = imgUrl;
-                myImage1.current.src = prePathUrl() + "images/BG/" + imgUrl + ".svg";
-                if (imgUrl != 'intro')
-                    myImage1.current.style.bottom = backgroundSize.bottom + 'px'
-                else
-                    myImage1.current.style.bottom = 0 + 'px'
-                if (optionNum != 1)  // transition scenes
-                    myImage1.current.className = 'background-move'
-
-                setTimeout(() => {
-                    myImage.current.src = prePathUrl() + "images/BG/" + imgUrl + ".svg";
-
-                    if (imgUrl != 'intro')
-                        myImage.current.style.bottom = backgroundSize.bottom + 'px'
-                    else
-                        myImage.current.style.bottom = 0 + 'px'
-
-                    if (optionNum != 1)  // transition scenes
-                        myImage1.current.className = ''
-                }, 1500);
-            }, waitTime);
-
+                myImage.current.src = prePathUrl() + "images/BG/" + imgUrl + ".svg";
+                myImage1.current.className = ''
+            }, 1500);
         }
-
     }
 
     function startTransition(num = 0) {
@@ -374,22 +364,11 @@ export default function BaseShot() {
         else
             setSizeState(true);
 
-        // if (isIntroTitleShow) {
-        //     refIntroText.current.style.transition = '0.0s'
-        //     refIntroText.current.style.left = geometry.left + -1 * geometry.width + "px"
-        // }
-
-
         setGeometry({ width: suitWidth, height: suitHeight, left: left, top: top, first: false })
 
     }
 
-    // setTimeout(() => {
-    //     if (isIntroTitleShow)
-    //         showIntroTitle()
-    //     else
-    //         hideIntroTitle()
-    // }, 100);
+
 
     return (
         <div
@@ -402,17 +381,31 @@ export default function BaseShot() {
                 position: "fixed", width: backgroundSize.width + "px"
                 , height: backgroundSize.height + "px",
                 left: backgroundSize.left + "px",
-                bottom: 0 + "px",
+                bottom: backgroundSize.bottom + "px",
                 pointerEvents: 'none',
                 userSelect: 'none'
             }} >
                 <img draggable={false} height={"100%"}
                     ref={myImage}
-                    src={prePathUrl() + "images/BG/intro.svg"}
+                    src={prePathUrl() + "images/BG/SB_05_BG_01.svg"}
                 />
             </div>
             <div style={{
 
+                position: "fixed", width: backgroundSize.width + "px"
+                , height: backgroundSize.height + "px",
+                left: backgroundSize.left + "px",
+                bottom: backgroundSize.bottom + "px",
+                pointerEvents: 'none',
+                userSelect: 'none'
+            }} >
+                <img draggable={false} height={"100%"}
+                    ref={myImage1}
+                    src={prePathUrl() + "images/BG/SB_05_BG_01.svg"}
+                />
+            </div>
+
+            <div style={{
                 position: "fixed", width: backgroundSize.width + "px"
                 , height: backgroundSize.height + "px",
                 left: backgroundSize.left + "px",
@@ -421,8 +414,8 @@ export default function BaseShot() {
                 userSelect: 'none'
             }} >
                 <img draggable={false} height={"100%"}
+                    ref={introImg}
                     onLoad={backgroundLoaded}
-                    ref={myImage1}
                     src={prePathUrl() + "images/BG/intro.svg"}
                 />
             </div>
@@ -434,7 +427,9 @@ export default function BaseShot() {
                     _startTransition={startTransition}
                     _hideIntroTitle={hideIntroTitle}
                     _showIntroTitle={showIntroTitle}
+                    controlIntroImg={controlIntroImg}
                     _isBackloaded={isBackloaded}
+                    bgLoad={backgroundLoaded}
                     _audioList={audioList}
                     currentSceneNumber={currentSceneNumber}
                     geo={geometry} __controlBacksound={controlBacksound}

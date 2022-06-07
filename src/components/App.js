@@ -16,21 +16,21 @@ import { prePathUrl, Switch } from "./CommonFunctions";
 var __geo;
 var backgroundImageIndex = 0;
 var backgroundImageList = [
-  "intro", //1
-  "SB_05_BG_01",
+  "SB_05_BG_01", //1
   "SB_05_BG_01",
   "SB_05_shaabash_01"
 ];
 
 
-const App = ({ geo, _setBackground, __controlBacksound, _startTransition,
+const App = ({ geo, _setBackground, controlIntroImg, _startTransition,
   _hideIntroTitle, _showIntroTitle, baseGeo, _isBackloaded, _audioList,
-  currentSceneNumber
+  currentSceneNumber, bgLoad
 }, ref) => {
 
   const [index, setIndex] = useState(0);
   const [_isBackSoundPlaying, _setBackgroundPlaying] = useState(true);
   const musicRef = useRef();
+  const scaleRef = useRef()
   __geo = geo;
 
   useEffect(
@@ -40,48 +40,26 @@ const App = ({ geo, _setBackground, __controlBacksound, _startTransition,
     }, []
   )
 
-  function controlBacksound() {
-    __controlBacksound();
-    if (_isBackSoundPlaying) {
-      _setBackgroundPlaying(false);
-    }
-    else {
-      _setBackgroundPlaying(true);
-    }
-  }
-
-  const transitionSceneList = [3, 8, 15]
   function changeBackgroundImage(judgeNum) {
-    if (judgeNum == 1)
-      _hideIntroTitle();
-    let sendNum = -1;
-    if (judgeNum == 0)
-      sendNum = 0;
-    if (transitionSceneList.includes(judgeNum))
-      sendNum = 1;
     if (judgeNum != backgroundImageIndex) {
       backgroundImageIndex = judgeNum;
-      _setBackground(backgroundImageList[judgeNum], sendNum);
+      _setBackground(backgroundImageList[judgeNum]);
     }
   }
 
   function setFomart(sceneNum) {
-    if (sceneNum == 1) {
-      musicRef.current.fomartSound()
-    }
     setIndex(sceneNum);
     changeBackgroundImage(sceneNum);
   }
 
   React.useImperativeHandle(ref, () => ({
     nextFunc: () => {
-      setFomart(1);
+      scaleRef.current.startGame()
+      musicRef.current.fomartSound()
       _hideIntroTitle()
 
     },
-    showMusicBtn: () => {
 
-    }
   }))
 
   function nextFunc() {
@@ -95,6 +73,7 @@ const App = ({ geo, _setBackground, __controlBacksound, _startTransition,
     _audioList.backAudio.pause();
     _audioList.backAudio.currentTime = 0;
 
+    controlIntroImg(true)
     setIndex(0);
     _showIntroTitle();
     _setBackground(backgroundImageList[0])
@@ -105,13 +84,12 @@ const App = ({ geo, _setBackground, __controlBacksound, _startTransition,
     <div >
       <div className={_isBackloaded ? '' : ''}>
         <Switch test={index}>
-          <TitleScene key={0} nextFunc={nextFunc} _geo={__geo} value={0} />
-          <ScaleScene key={1} currentLetterNum={currentSceneNumber} nextFunc={nextFunc} _baseGeo={baseGeo}
-            audioList={_audioList} _geo={__geo} value={1} />
-          <DrawingScene key={2}
+          <ScaleScene key={0} ref={scaleRef} currentLetterNum={currentSceneNumber} bgLoad={bgLoad} nextFunc={nextFunc} _baseGeo={baseGeo}
+            audioList={_audioList} _geo={__geo} value={0} />
+          <DrawingScene key={1}
             startTransition={_startTransition}
-            currentLetterNum={currentSceneNumber} nextFunc={nextFunc} _baseGeo={baseGeo} audioList={_audioList} _geo={__geo} value={2} />
-          <ExcellentScene key={3} nextFunc={goHome} audioList={_audioList} _geo={__geo} value={3} _baseGeo={baseGeo} />
+            currentLetterNum={currentSceneNumber} nextFunc={nextFunc} _baseGeo={baseGeo} audioList={_audioList} _geo={__geo} value={1} />
+          <ExcellentScene key={2} nextFunc={goHome} audioList={_audioList} _geo={__geo} value={2} _baseGeo={baseGeo} />
         </Switch>
       </div>
 
